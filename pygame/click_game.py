@@ -1,46 +1,49 @@
-from random import randiant
-
-white = [255, 255, 255]
-red = [255, 0, 0]
-
-anime = Actor ('anime')
-anime.pos = (20,20)
-
-coin = Actor('coin')
-coin.pos = (30, 30)
-
-width = 500
-height = 500
-vel = 5
+from random import randint
+WIDTH = 400
+HEIGHT = 400
+score = 0 
+game_over = False
+character = Actor("character")
+character.pos = 100, 100
+coin = Actor("coin")
+coin.pos = 200, 200
 
 def draw():
-    screen.clear()
-    screen.clear(grey)
-    anime.draw()
+     screen.fill("darkgreen")
+     character.draw()
+     coin.draw()
+     screen.draw.text("Score: " + str(score), color="black", topleft=(10, 10))
+     if game_over:
+         screen.fill("red")
+         screen.draw.text("Final Score: " + str(score), topleft=(10, 10), fontsize=60)
 
-
-def update():
-    move.left(2)
-
-
-def on_mouse_down(pos):
-    if anime.collidepoint(pos):
-        print("Owwwww!!!")
-    else:
-        print("You're aim is a POTATOE")
-        quit()
-
-
-anime.x = radint(10, 800)
-anime.y = radint(10, 800)
-
-def move_right(speed):
-    anime.left += speed
-    if anime.left > WIDTH:
-        anime.right = 0
-
-def move_left(speed):
-    anime.left += speed
-    if anime.left > WIDTH:
-        anime.right = 0
-
+def place_coin():
+    coin.x = randint(20, (WIDTH - 20))
+    coin.y = randint(20, (HEIGHT - 20))
+    
+def time_up():
+    global game_over
+    game_over = True
+    
+def update ():
+    global score
+    
+    if keyboard.a:
+        character.x = character.x - 4
+    elif keyboard.d:
+        character.x = character.x + 4
+    elif keyboard.w:
+        character.y = character.y - 4
+    elif keyboard.s:
+        character.y = character.y + 4
+    elif keyboard.space:
+        character.y = character.y - 8
+    
+    coin_collected = character.colliderect(coin)
+    
+    if coin_collected:
+        score = score + 10
+        place_coin()
+    
+clock.schedule(time_up, 7.0)
+place_coin()
